@@ -1,7 +1,9 @@
 const PORT = 8000;
 const puppeteer = require("puppeteer");
 const express = require('express');
+const cors = require('cors');
 
+app.use(cors())
 const app = express();
 
 const getInstagramData = async () => {
@@ -30,7 +32,7 @@ const getInstagramData = async () => {
   return { title, image };
 };
 
-app.get('/instagram', async (req, res) => {
+app.get('/instagram', cors(), async (req, res, next) => {
   try {
     const { title, image } = await getInstagramData();
     console.log(title);
