@@ -33,7 +33,7 @@ const getInstagramData = async () => {
   return { title, image };
 };
 
-app.get('/instagram', cors(), async (req, res, next) => {
+app.get('/instagram', async (req, res) => {
   try {
     const { title, image } = await getInstagramData();
     console.log(title);
