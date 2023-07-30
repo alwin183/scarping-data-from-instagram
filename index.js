@@ -3,8 +3,9 @@ const puppeteer = require("puppeteer");
 const express = require('express');
 const cors = require('cors');
 
-app.use(cors())
 const app = express();
+app.use(cors())
+
 
 const getInstagramData = async () => {
   const browser = await puppeteer.launch({ headless: true });
