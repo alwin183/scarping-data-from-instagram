@@ -92,7 +92,7 @@ app.get('/get_link_data', async (req, res) => {
       image
     });
   } catch (error) {
-    res.status(500).json({ error: "Error occurred while fetching data" });
+    res.status(500).json({ error: error });
   }
 });
 
