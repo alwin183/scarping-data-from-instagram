@@ -2,9 +2,29 @@ const PORT = 8000;
 const puppeteer = require("puppeteer");
 const express = require('express');
 const cors = require('cors');
+const fs = require('fs');
+const client = require('https');
+
+function downloadImage(url, filepath) {
+    return new Promise((resolve, reject) => {
+        client.get(url, (res) => {
+            if (res.statusCode === 200) {
+                res.pipe(fs.createWriteStream(filepath))
+                    .on('error', reject)
+                    .once('close', () => resolve(filepath));
+            } else {
+                // Consume response data to free up memory
+                res.resume();
+                reject(new Error(`Request Failed With a Status Code: ${res.statusCode}`));
+
+            }
+        });
+    });
+}
 
 const app = express();
 app.use(cors());
+app.use(express.static('public'));
 
 const checkSocialMediaLink = (link) => {
   if (link.includes("instagram.com/")) {
@@ -38,6 +58,8 @@ const getData = async (link) => {
         .getAttribute("content")
     );
 
+    downloadImage(image, 'public/images/image.png')
+
     await browser.close();
   }
 
@@ -54,7 +76,7 @@ app.get('/health', async (req, res) => {
       status: 200,
     });
   } catch (error) {
-    res.status(500).json({ error: "Error occurred while fetching data" });
+    res.status(500).json({ error: error });
   }
 });
 
